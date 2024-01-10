@@ -108,7 +108,7 @@ namespace VencordHelper.ViewModels
         {
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Discord");
 
-            var appFolder = Directory.GetDirectories(path).First(x => x.Contains("app"));
+            var appFolder = Directory.GetDirectories(path).OrderDescending().First(x => x.Contains("app"));
 
             Process.Start(new ProcessStartInfo()
             {

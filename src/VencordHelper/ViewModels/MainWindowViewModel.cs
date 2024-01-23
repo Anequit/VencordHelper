@@ -71,13 +71,25 @@ namespace VencordHelper.ViewModels
             {
                 FileName = Path.Combine(Path.GetTempPath(), fileName),
                 Arguments = args,
-                UseShellExecute = true
+                UseShellExecute = false,
+                RedirectStandardInput = true
             });
 
             if(process is null)
                 throw new NotSupportedException("Unsupported sequence of events");
 
-            await process.WaitForExitAsync();
+            await Task.Delay(TimeSpan.FromSeconds(1));
+
+            do
+            {
+                await Task.Delay(100);
+
+				// Fix for https://github.com/Vencord/Installer/blob/839ff036caf9add05c0e235d37b67428386ccaa1/cli.go#L186C9-L186C14
+				if(!process.HasExited)
+                    process.StandardInput.WriteLine();
+                else
+                    break;
+            } while(true);
         }
 
         private bool CheckForDiscord()

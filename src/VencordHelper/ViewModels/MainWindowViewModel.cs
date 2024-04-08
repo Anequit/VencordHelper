@@ -67,6 +67,9 @@ namespace VencordHelper.ViewModels
 
         private async Task RunInstallerAsync(string fileName, string args)
         {
+            // Attempt to kill discord before running vencord cli
+            CloseDiscord();
+
             Process? process = Process.Start(new ProcessStartInfo()
             {
                 FileName = Path.Combine(Path.GetTempPath(), fileName),
@@ -128,6 +131,16 @@ namespace VencordHelper.ViewModels
                 UseShellExecute = true,
                 CreateNoWindow = false
             });
+        }
+
+        private void CloseDiscord()
+        {
+            Process[] processes = Process.GetProcessesByName("Discord");
+
+            foreach(Process process in processes) 
+            {
+                process.Kill();
+            }
         }
 
         private async Task DownloadFileToTemp(string fileName, string url)

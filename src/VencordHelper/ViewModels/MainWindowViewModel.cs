@@ -101,7 +101,7 @@ namespace VencordHelper.ViewModels
 
             if(!Directory.Exists(path))
             {
-                MessageBoxResult result = MessageBox.Show("Discord was not found. \nClick \"Ok\" to vist Discord's website.", "Error", MessageBoxButton.OKCancel, MessageBoxImage.Error);
+                MessageBoxResult result = MessageBox.Show("Discord was not found. \nClick \"Ok\" to visit Discord's website.", "Error", MessageBoxButton.OKCancel, MessageBoxImage.Error);
 
                 if(result == MessageBoxResult.OK)
                 {

@@ -58,10 +58,10 @@ namespace VencordHelper.ViewModels
 
         private async Task VerifyLatestVersionDownloadedAsync(string fileName, string downloadUrl)
         {
-            string localHash = GetLocalHash(fileName);
-            string onlineHash = await GetOnlineHash(downloadUrl);
+            string? localHash = GetLocalHash(fileName);
+            string? onlineHash = await GetOnlineHash(downloadUrl);
 
-            if(localHash != onlineHash)
+            if((localHash is null && onlineHash is null) || localHash != onlineHash)
                 await DownloadFileToTemp(fileName, downloadUrl);
         }
 
@@ -156,11 +156,11 @@ namespace VencordHelper.ViewModels
             }
         }
 
-        private async Task<string> GetOnlineHash(string url)
+        private async Task<string?> GetOnlineHash(string url)
         {
             HttpResponseMessage response = await _client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
-            string hash = string.Empty;
+            string? hash = null;
 
             if(response.Content.Headers.ContentMD5 is not null)
                 hash = Convert.ToBase64String(response.Content.Headers.ContentMD5);
@@ -168,12 +168,12 @@ namespace VencordHelper.ViewModels
             return hash;
         }
 
-        private string GetLocalHash(string fileName)
+        private string? GetLocalHash(string fileName)
         {
             string path = Path.Combine(Path.GetTempPath(), fileName);
 
             if(!File.Exists(path))
-                return string.Empty;
+                return null;
 
             using(MD5 md5 = MD5.Create())
             {
